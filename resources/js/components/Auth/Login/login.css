@@ -1,0 +1,17 @@
+.form-wrapper {
+    margin-top: 20px;
+}
+.auth-form {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+    0 10px 10px rgba(0,0,0,0.22);
+    background-color: #FFFFFF;
+    border-color: #F1EEEA;
+}
+.auth-form > div,
+.form-fields > div {
+    margin-bottom: 20px;
+}
