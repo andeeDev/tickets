@@ -5,26 +5,38 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import './login.css';
 import request from "../../../services/request";
-import {useHistory} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
+
+import {connect} from "react-redux";
 
 
 
-const Login = ({setError}) => {
+const Login = ({setError, dispatch,  ...props}) => {
     const [checked, setCheckbox] = useState(false);
     const history = useHistory();
     const toggleCheckbox = () => {
         setCheckbox(!checked);
     }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        dispatch({
+            type: 'FETCH_TOKEN_REQUEST'
+        });
         const formData = new FormData(event.target);
         try {
+            /*fetchWithAuth('')*/
             const {data} = await request({method: 'post', url: 'auth/login', data: formData});
-            localStorage.setItem('token', JSON.stringify(data));
-            console.log(data);
-            history.push('/projects')
+            dispatch({
+                type: 'FETCH_TOKEN_SUCCESS',
+                payload: data
+            });
+            history.push('/profile');
         } catch (e) {
-            setError(e);
+            dispatch({
+                type: 'FETCH_TOKEN_FAILURE',
+                payload: e
+            });
         }
 
     }
@@ -62,5 +74,17 @@ const Login = ({setError}) => {
         </>
     );
 }
-export default Login;
+/*const mapDispatchToProps = dispatch => {
+    return {
+        success: (data) => dispatch({ type: 'FETCH_TOKEN_REQUEST', payload: data }),
+        error: (error) => dispatch({ type: 'FETCH_TOKEN_FAILURE', payload: error }),
+        loading: () => dispatch({ type: 'FETCH_TOKEN_SUCCESS' })
+    }
+}*/
+const mapStateToProps = (state) => {
+    return {
+        state: state
+    }
+}
+export default connect(mapStateToProps)(Login);
 

@@ -5,15 +5,11 @@ import ErrorContext from "../../context/ErrorContext/ErrorContext";
 import getFirstError from "../../constants/getFirstError";
 
 const StickMessage = ({error,setError, open: openProps}) => {
-    const value = useContext(ErrorContext);
     const [thisError, setThisError] = useState(error);
-    const [open, setOpen] = React.useState(openProps);
-    if(openProps !== open) {
-        setOpen(openProps);
-    }
+    let timeoutId;
     let errorMessage;
+
     if(thisError) {
-        console.log(thisError)
         switch (thisError.response.status) {
             case 401:
                 errorMessage = 'Not authorized';
@@ -32,25 +28,28 @@ const StickMessage = ({error,setError, open: openProps}) => {
                 break;
         }
     }
+
     useEffect(() => {
         setThisError(error);
-        const id = setInterval(() => setThisError(null), 6000);
+        timeoutId = setTimeout(() => setThisError(null), 6000);
         const clear = () => {
-            clearInterval(id);
+            clearTimeout(timeoutId);
             setThisError(null)
         }
-        return () => clear;
+        return clear;
     }, [error])
 
 
     const handleClose = () => {
-        setOpen(false);
+
+        clearTimeout(timeoutId);
+        setThisError(null);
     };
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
-//autoHideDuration={6000}
+    //autoHideDuration={6000}
     return (
         <Snackbar open={!!thisError} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">
