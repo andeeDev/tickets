@@ -11,39 +11,18 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+
     public function validateForPassportPasswordGrant($password)
     {
         return Hash::check($password, $this->password);
     }
-    /*public function getImageAttribute($value)
-    {
-        if ($value === null) {
-            return $this->parent->image;
-        }
 
-        return base64_encode($value);
-    }*/
-    //implement for searching
-    /*protected static function boot()
-    {
-        parent::boot();
-
-        // Сортировка по полю name в алфавитном порядке
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('name', 'asc');
-        });
-    }*/
-
-    //imagecreatefromstring
-    /*protected $defaults = array(
-        'image' => 'null',
-    );
-
-    public function __construct(array $attributes = array())
-    {
-        $this->setRawAttributes($this->defaults, true);
-        parent::__construct($attributes);
-    }*/
+    public function projects() {
+        return $this->belongsTo(
+            Project::class,
+            'id',
+            'user_id');
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -60,7 +39,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'pivot'
     ];
 
     /**

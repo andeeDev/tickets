@@ -12,6 +12,10 @@ use function GuzzleHttp\Promise\all;
 
 class UserController extends Controller
 {
+    public function autoCompleteUsers(Request $request)
+    {
+        return response()->json(['users' => User::all()]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -76,6 +80,7 @@ class UserController extends Controller
             'sex' => 'nullable|string'*/
         ]);
         $values = $request->only(['name', 'email', 'country', 'sex']);
+        $user->update($values);
         $password = $request->input('password');
         $password_confirmation = $request->input('password_confirmation');
         if($password !== null) {
@@ -96,9 +101,8 @@ class UserController extends Controller
                 File::get($file));
             $user->image = $newName;
         }
-        $user->update($values);
         $user->save();
-        return response($request->all(), 200);
+        return response($user, 200);
     }
 
     /**

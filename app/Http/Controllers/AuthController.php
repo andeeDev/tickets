@@ -11,12 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /*public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'registration', ]]);
-    }*/
-
-
 
     /**
      * Refresh a token.
@@ -25,15 +19,13 @@ class AuthController extends Controller
      */
     public function refresh(Request $request)
     {
-        /*$user = $request->user();
-        $user->token()->revoke();*/
         $http = new \GuzzleHttp\Client;
         $response = $http->post('http://laravel.example.com/oauth/token', [
             'form_params' => [
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $request->input('refresh_token'),
                 'client_id' => 1,
-                'client_secret' => 'v92BIbPSMzDEBp14bvi3atpWLL72CafCY82d4WDr',
+                'client_secret' => env("APP_AUTH_CLIENT"),
                 'scope' => '',
             ],
         ]);
@@ -102,35 +94,20 @@ class AuthController extends Controller
                 'form_params' => [
                     'grant_type' => 'password',
                     'client_id' => '1',
-                    'client_secret' => 'MBtRwn3yLQqcMycmPcBYHyTaf3wilwzyrmdlEoZI',
+                    'client_secret' => env("APP_AUTH_CLIENT"),
                     'username' => $request->input('email'),
                     'password' => $request->input('password'),
                     'scope' => '',
                 ],
             ]);
         } catch (GuzzleException $exception){
-            return response('Guzzle unathorize', 401);
+            return response('Guzzle unathorize' .  $exception->getMessage(), 401);
         }
-
-        //$user = $request->user();
-        //$tokenResult = $user->createToken('Personal Access Token ' . $request->input('email'));
-        //$token = $tokenResult->token;
-        //$token->expires_at = Carbon::now()->addWeek();
-        //if ($request->remember_me)
-            //$token->expires_at = Carbon::now()->addWeeks(1);
-        //$token->save();
         $response_array = json_decode($response->getBody(), true);
         return $this->respondWithTokens(auth()->user(),
             $response_array['access_token'],
             $response_array['refresh_token'],
-            $response_array['expires_in']);//$this->respondWithToken($response->, $response->refresh_token, $response->expire);
-        /*response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => //Carbon::parse(
-                $tokenResult->token->expires_at
-            //)->toDateTimeString()
-        ]);*/
+            $response_array['expires_in']);
     }
 
     /**
@@ -149,6 +126,10 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    public function user(Request $request) {
+        return response(auth()->user(), 200);
     }
 
 
