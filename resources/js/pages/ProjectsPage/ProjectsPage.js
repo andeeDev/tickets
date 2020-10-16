@@ -1,15 +1,14 @@
 import React from "react";
-import getAccessToken from '../../constants/getAccessToken';
 import Header from "../../components/Header/Header";
+import ProjectsTable from '../../components/ProjectsTable/ProjectsTable';
+
 
 const ProjectsPage = () => {
-    const token = getAccessToken();
-    console.log(token)
-
     return (
         <>
             <Header/>
-            <h1> Projects Page Token </h1>
+            <h1 style={{textAlign: 'center'}}> Projects Page</h1>
+            <ProjectsTable/>
         </>
     );
 }

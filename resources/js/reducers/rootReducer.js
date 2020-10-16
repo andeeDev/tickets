@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux';
 // reducers
-import authReducers from './authReducer';
+import authReducer from './authReducer';
+import ticketsReducer  from './ticketsReducer.js';
 
 const rootReducer = combineReducers({
-    auth: authReducers
+    auth: authReducer,
+    ticketsR: ticketsReducer
 });
 
 export default rootReducer;

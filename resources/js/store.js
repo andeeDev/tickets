@@ -7,6 +7,6 @@ const persistentStore = persistenStore();
 const store = createStore(rootReducer, persistentStore, applyMiddleware(logger));
 
 store.subscribe(() => {
-    saveState(store.getState());
+    saveState(store.getState().auth);
 })
 export default store;
