@@ -1,0 +1,50 @@
+main {
+    margin: 20px;
+}
+.profile__text-info {
+    display: flex;
+    flex-direction: column;
+}
+.profile__header-info {
+    margin-left: 5%;
+}
+
+.profile__image-controller {
+    display: flex;
+}
+.profile__text-info {
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 1px solid gray;
+}
+.user-information__name {
+
+}
+
+.user-information__drop-container {
+
+}
+
+.user-information__drop-container p {
+    opacity: 1;
+    color: black;
+}
+.user-information__wrapper {
+    width: 200px;
+}
+.user-information__list {
+    display: flex;
+}
+.user-information__list > div {
+    margin-left: 20px;
+}
+
+.user-information__dropzone {
+    background-color: darkgray;
+    border: 2px dashed grey;
+    opacity: 0.5;
+}
+
+.user-information__photo-button-wrapper {
+    margin-top: 20px;
+}

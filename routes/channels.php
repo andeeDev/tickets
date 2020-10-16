@@ -12,4 +12,9 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
+Broadcast::routes(['middleware' => ['web', 'auth']]);
+Broadcast::channel('chat', \App\Broadcasting\MessagesChannel::class);
+/*Broadcast::channel('chat.{task_id}', function(\App\User $user, int $task_id) {
+    return true || false;
+}); */
 

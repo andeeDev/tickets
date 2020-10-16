@@ -11,5 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.copy('node_modules/socket.io-client/dist/socket.io.js',
+    'public/js');
+
 mix.react('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .setResourceRoot("/");
+
