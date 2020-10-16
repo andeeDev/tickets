@@ -16,8 +16,9 @@ class UsersTicketsMigration extends Migration
         Schema::create('user_ticket', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained();
             $table->bigInteger('ticket_id')->nullable(false)->unsigned();
-            $table->foreign('ticket_id')->references('id')->on('tickets');
-
+            $table->foreign('ticket_id')->references('id')
+                ->on('tickets')
+                ->onDelete('cascade');
             $table->enum('is_master', [1, 0]);
         });
     }

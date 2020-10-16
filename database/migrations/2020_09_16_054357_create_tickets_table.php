@@ -15,19 +15,15 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->string('theme');
-            $table->string('description');
-            $table->enum('status', ['new', 'progress', 'done']);
-            $table->enum('priority', ['normal', 'low', 'high']);
-            $table->foreignId('project_id')->constrained();
-
-            /*
-             *
-             * $table->foreign('project_id')->references('id')->on('projects');
-             * $table->foreign('ticket_id')->references('ticket_id')->on('user_ticket');
-            */
-
-            $table->timestamps();
+            $table->string('title')->default('');
+            $table->string('subject')->default('');
+            $table->string('description')->default('');
+            $table->enum('status', ['', 'new', 'progress', 'done'])
+                ->default('');
+            $table->enum('priority', ['', 'normal', 'low', 'high'])
+                ->default('');
+            $table->foreignId('project_id')
+                ->nullable()->constrained();
         });
     }
 
