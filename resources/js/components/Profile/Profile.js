@@ -61,9 +61,8 @@ const Profile = ({user, access_token, success}) => {
                 data: formData,
                 headers:{ 'Authorization': 'Bearer ' + access_token}
             });
-            console.log('response.data', response.data);
+            success(response.data);
         } catch (e) {
-            console.log(e);
 
         }
     }

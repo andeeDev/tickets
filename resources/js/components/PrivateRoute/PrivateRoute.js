@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 
 
 const PrivateRoute = ({component: Component,  auth, ...rest}) => {
-    console.log('private, auth = ', auth);
     return (
         <Route
             {...rest}
@@ -19,6 +18,5 @@ function mapStateToProps(state) {
         auth: state.auth.tokens
     };
 }
-//<Redirect to={'/login'} />
-//
+
 export default connect(mapStateToProps)(PrivateRoute);

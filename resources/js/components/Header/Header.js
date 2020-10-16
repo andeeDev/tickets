@@ -6,9 +6,9 @@ import request from "../../services/request";
 import {clearStorage} from '../../persistentStore/persistenStore';
 import {useHistory} from "react-router";
 import {connect} from "react-redux";
+import {Avatar} from "@material-ui/core";
 
 const Header = ({user, access_token, logoutFetch, logoutSuccess, logoutFail, ...pro}) => {
-    console.log(pro);
 
     const history = useHistory();
     const logout = async (e) => {
@@ -37,7 +37,7 @@ const Header = ({user, access_token, logoutFetch, logoutSuccess, logoutFail, ...
                 type: 'LOGOUT_TOKEN_FAILURE',
                 payload: e
             })
-            console.log(e);
+
         }
 
     }
@@ -58,14 +58,15 @@ const Header = ({user, access_token, logoutFetch, logoutSuccess, logoutFail, ...
                 <ul className='header__user-list'>
                     <li className='header__list-item header__user-item'>
                         <Link className='header__link ' to={'profile'} >
-                            <img className='header__profile-image'
-                                 src={
-                                     user.image?
-                                         `/storage/${user.image}`:
-                                         `/img/user-profile-photo.png`
-                                 }
-                                 width={"20px"} height={'20px'}
-                                 alt='user profile photo'/>
+                            <Avatar className='header__profile-image'
+                                src={
+                                    user.image?
+                                        `/storage/${user.image}`:
+                                        `/img/user-profile-photo.png`
+                                }
+                                width={"5px"} height={'5px'}
+                                alt='user profile photo'
+                            />
                             <span className='header__user-name'>{user.name}</span>
                         </Link>
                     </li>

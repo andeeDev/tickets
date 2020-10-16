@@ -1,0 +1,17 @@
+.react-autosuggest__suggestions-container {
+    position: relative;
+    width: 100%;
+}
+
+.react-autosuggest__suggestions-list {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+    background-color: white;
+}
+.react-autosuggest__suggestion {
+    cursor: pointer;
+    padding: 5px 10px;
+}

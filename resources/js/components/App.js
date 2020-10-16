@@ -15,28 +15,30 @@ import ErrorHandler from '../components/ErrorBoundary/ErrorBoundary';
 
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
+import SocketContext from "../context/SocketContext";
+
 import { Provider } from 'react-redux';
 import store from "../store";
 
-
-
+const socket = new WebSocket('ws://localhost:8080');
 const App = () => {
-
     return (
         <Provider store={store}>
-        <BrowserRouter>
-                <ErrorHandler>
-                    <Switch>
-                        <Route exact path="/register" component={RegisterPage} />
-                        <Route exact path="/login" component={LoginPage} />
-                        <PrivateRoute path='/profile' component={ProfilePage} />
-                        <PrivateRoute path='/projects' component={ProjectsPage} />
-                        <PrivateRoute path='/tickets' component={TicketsPage} />
-                        <Route component={Page404} />
-                    </Switch>
-                </ErrorHandler>
-        </BrowserRouter></Provider>
-
+        <SocketContext.Provider value={socket} >
+            <BrowserRouter>
+                    <ErrorHandler>
+                        <Switch>
+                            <Route exact path="/register" component={RegisterPage} />
+                            <Route exact path="/login" component={LoginPage} />
+                            <PrivateRoute path='/profile' component={ProfilePage} />
+                            <PrivateRoute path='/projects' component={ProjectsPage} />
+                            <PrivateRoute path='/tickets' component={TicketsPage} />
+                            <Route component={Page404} />
+                        </Switch>
+                    </ErrorHandler>
+            </BrowserRouter>
+        </SocketContext.Provider>
+        </Provider>
     )
 }
 
