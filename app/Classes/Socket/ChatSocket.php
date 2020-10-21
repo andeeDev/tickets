@@ -6,7 +6,7 @@ namespace App\Classes\Socket;
 
 use App\Classes\Handler\Handler;
 use App\Classes\Socket\Base\BaseSocket;
-use App\Project;
+use \SplObjectStorage;
 use Ratchet\ConnectionInterface;
 
 class ChatSocket extends BaseSocket
@@ -16,7 +16,7 @@ class ChatSocket extends BaseSocket
 
     public function __construct()
     {
-        $this->clients = new \SplObjectStorage();
+        $this->clients = new SplObjectStorage();
         $this->handler = new Handler();
     }
 
@@ -35,11 +35,21 @@ class ChatSocket extends BaseSocket
         };
     }
 
+
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $this->handler->handle(json_decode($msg, true),
-            $this->sendToOthers($from));
+        try {
+            $this->handler->handle(json_decode($msg, true),
+                $this->sendToOthers($from), $this->sendToUser($from));
+        } catch (\Exception $exception) {
+            $from->send('Server error, try later');
+        }
+    }
 
+    public function sendToUser($from) {
+        return function ($message) use ($from) {
+            $from->send($message);
+        };
     }
 
 
