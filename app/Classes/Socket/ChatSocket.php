@@ -35,9 +35,9 @@ class ChatSocket extends BaseSocket
     public  function sendToOthers($from)  {
         return function($msg) use ($from){
             foreach($this->clients as $client) {
-                //if($from !== $client) {
+                if($from !== $client) {
                     $client->send($msg);
-                //}
+                }
             }
         };
     }
