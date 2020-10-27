@@ -1,6 +1,5 @@
 <?php
 
-use App\Events\ChatMessage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,15 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
-// routes/web.php
-Route::get('/fire', function () {
-    event(new ChatMessage());
-    broadcast(new ChatMessage());
-    return 'ok';
-});
-Route::post('/broadcasting/auth', function () {
-    return response('ok', 200);
 });
 
 Route::view('/{path?}', 'welcome');
