@@ -1,9 +1,9 @@
 <?php
 
+use App\Logging\LogFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
-
 return [
 
     /*
@@ -99,6 +99,13 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'errorLogger' => [
+            'driver' => 'single',
+            'tap' => [LogFormatter::class],
+            'path' => storage_path('logs/errors.log'),
+            'level' => 'debug'
+        ]
     ],
 
 ];
