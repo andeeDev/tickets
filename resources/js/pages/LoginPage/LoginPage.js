@@ -14,9 +14,6 @@ const LoginPage = () => {
     return (
         <>
             <Login setError={setError}/>
-            {error ?
-                <StickMessage setError={setError} error={error} /> :
-                null}
         </>
     );
 }

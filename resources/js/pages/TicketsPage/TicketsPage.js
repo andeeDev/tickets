@@ -6,7 +6,6 @@ import Filters from "../../components/Filters/Filters";
 const TicketsPage = ()  => {
     return (
         <>
-            <Header/>
             <h1>Tickets page</h1>
             <Filters/>
             <Tickets/>

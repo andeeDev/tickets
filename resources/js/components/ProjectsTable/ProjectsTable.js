@@ -29,15 +29,20 @@ const ProjectsPage = ({access_token}) => {
     const [projects, setProjects] = useState([]);
     socket.onmessage = (event) => {
         const message = JSON.parse(event.data);
+        console.log("message = ", message);
         switch (message.type) {
             case 'projects.title':
-                const newProjects = projects.map((project) => project.id === message.id ?
-                    {...project, title: message.title } :
-                    project );
+                const newProjects = projects.map((project) => project.id === message.project.id ?
+                    {...project, title: message.project.title } :
+                    project);
+                console.log("newProjects = ", newProjects);
                 setProjects(newProjects);
                 break;
             case 'projects.delete':
                 setProjects(projects.filter(p => p.id !== message.project_id))
+                break;
+            case 'projects.add':
+                setProjects([...projects, message["project"]]);
                 break;
         }
     };
@@ -81,20 +86,12 @@ const ProjectsPage = ({access_token}) => {
 
 
     const addProject = async () => {
-        try {
-            const {data} = await request({
-                method: 'POST',
-                url: 'projects',
-                headers
-            });
-            setProjects(
-                [
-                    ...projects,
-                    data
-                ]);
-        } catch (e) {
-
-        }
+        const message = {
+            type: 'projects.add',
+            access_token
+        };
+        console.log("add Projecct, message = ", message);
+        send(JSON.stringify(message));
     };
 
     const onChangeInput = (id) => (e) => {
@@ -111,7 +108,7 @@ const ProjectsPage = ({access_token}) => {
         setProjects(newProjects);
     }
 
-    const deleteProject = (id) => (e) => {
+    const deleteProject = (id) => () => {
         const socketObject = {
             type: 'projects.delete',
             id: id,
@@ -124,12 +121,12 @@ const ProjectsPage = ({access_token}) => {
         <div className='projects__table-paper'>
             <table className='projects__table'>
                 <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Creator</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Creator</th>
+                        <th/>
+                    </tr>
                 </thead>
                 <tbody>
                 {projects.map((project) => {
@@ -140,7 +137,9 @@ const ProjectsPage = ({access_token}) => {
                                 <input onChange={onChangeInput(project.id)}
                                     className='projects__input'
                                        placeholder='Enter project title'
-                                       name={`project.title[${project.id}]`} value={project.title} />
+                                       name={`project.title[${project.id}]`}
+                                       value={project.title}
+                                />
                             </td>
                             <td>
                                 <Tooltip title={project.users.name} aria-label="add">
@@ -159,9 +158,7 @@ const ProjectsPage = ({access_token}) => {
                         </tr>
                     );
                 })}
-
                 </tbody>
-
             </table>
             <Tooltip title="Add" aria-label="add" className='projects_add-button'>
                 <Fab onClick={addProject} color="secondary" >

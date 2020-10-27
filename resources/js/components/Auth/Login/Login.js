@@ -35,7 +35,7 @@ const Login = ({setError, dispatch,  ...props}) => {
         } catch (e) {
             dispatch({
                 type: 'FETCH_TOKEN_FAILURE',
-                payload: e
+                payload: {status: e.response.status, message: e.response.data.message}
             });
         }
 

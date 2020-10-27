@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from "react-router-dom";
-import { Route, Switch } from "react-router";
+import {Route, Switch} from "react-router";
 // pages
 import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
@@ -12,32 +12,39 @@ import TicketsPage from '../pages/TicketsPage/TicketsPage'
 // context providers
 import ErrorHandler from '../components/ErrorBoundary/ErrorBoundary';
 // functions
-
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
-
 import SocketContext from "../context/SocketContext";
-
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import store from "../store";
+import LayoutWithStick from "./Layout/LayoutWithStick";
+import LayoutHeader from "./Layout/LayoutHeader";
 
 const socket = new WebSocket('ws://localhost:8080');
 const App = () => {
     return (
         <Provider store={store}>
-        <SocketContext.Provider value={socket} >
-            <BrowserRouter>
+            <SocketContext.Provider value={socket}>
+                <BrowserRouter>
                     <ErrorHandler>
                         <Switch>
-                            <Route exact path="/register" component={RegisterPage} />
-                            <Route exact path="/login" component={LoginPage} />
-                            <PrivateRoute path='/profile' component={ProfilePage} />
-                            <PrivateRoute path='/projects' component={ProjectsPage} />
-                            <PrivateRoute path='/tickets' component={TicketsPage} />
-                            <Route component={Page404} />
+                            <LayoutWithStick>
+                                <Route exact path="/register" component={RegisterPage}/>
+                                <Route exact path="/login" component={LoginPage}/>
+                                <Route path={["/profile", "/projects", "/tickets"]} exact>
+                                    <LayoutHeader>
+                                        <Switch>
+                                            <PrivateRoute path="/profile" component={ProfilePage}/>
+                                            <PrivateRoute path='/projects' component={ProjectsPage}/>
+                                            <PrivateRoute path='/tickets' component={TicketsPage}/>
+                                        </Switch>
+                                    </LayoutHeader>
+                                </Route>
+                            </LayoutWithStick>
+                            <Route component={Page404}/>
                         </Switch>
                     </ErrorHandler>
-            </BrowserRouter>
-        </SocketContext.Provider>
+                </BrowserRouter>
+            </SocketContext.Provider>
         </Provider>
     )
 }
@@ -45,7 +52,7 @@ const App = () => {
 
 if (document.getElementById('app')) {
     ReactDOM.render(
-            <App/>
+        <App/>
         , document.getElementById('app'));
 }
 

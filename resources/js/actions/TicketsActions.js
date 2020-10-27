@@ -19,6 +19,10 @@ const requestAllTickets = (dispatch, headers) => {
         });
     } catch (e) {
         console.log(e);
+        /*errorTickets({
+            status: e.response.status,
+            message: e.response.data.message
+        });*/
     }
 }
 const updateTicketsList = (dispatch, data) => {

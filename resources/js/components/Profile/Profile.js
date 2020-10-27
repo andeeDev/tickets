@@ -115,8 +115,6 @@ const Profile = ({user, access_token, success}) => {
                                 </FormControl>
                             </div>
                             <div className='user-information__wrapper'>
-
-
                                 <Autocomplete
                                     id="combo-box-demo"
                                     options={countries}
@@ -197,15 +195,5 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-/*<Autocomplete
-    ref={autoCompleteRef}
-    id="combo-box-demo"
-    options={countries}
-    getOptionLabel={(option) => option ? option : ''}
-    style={{ width: 200 }}
-    defaultValue={stateUser.country !== 'null' ? stateUser.country : '' }
-    onChange={onChangeCountry}
-    renderInput={(params) => <TextField {...params} label="Choose your country" variant="outlined" />}
-/>*/
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
