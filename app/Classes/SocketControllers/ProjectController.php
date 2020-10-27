@@ -32,7 +32,6 @@ class ProjectController
         }
         DB::beginTransaction();
         try {
-            print_r($message["title"]);
             $project = $this->service->updateProjectTitle($message["id"], $message["title"]);
             DB::commit();
             $send($project);
