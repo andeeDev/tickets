@@ -32,8 +32,6 @@ class Handler
             case "tickets.update":
                 (new TicketsController())->update($message, $send, $responseWithError);
                 break;
-
-
         }
     }
 
