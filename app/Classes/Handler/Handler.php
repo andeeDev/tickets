@@ -12,12 +12,17 @@ class Handler
 
     public function handle($message, $send, $responseWithError) {
         switch ($message["type"]) {
-            case "projects.title":
-                (new ProjectController())->updateTitle($message, $send, $responseWithError);
+            case "projects.add":
+                (new ProjectController())->addProject($message, $send, $responseWithError);
                 break;
             case "projects.delete":
                 (new ProjectController())->deleteProject($message, $send, $responseWithError);
                 break;
+            case "projects.title":
+                (new ProjectController())->updateTitle($message, $send, $responseWithError);
+                break;
+
+
             case "tickets.add":
                 (new TicketsController())->create($message, $send, $responseWithError);
                 break;
@@ -27,6 +32,8 @@ class Handler
             case "tickets.update":
                 (new TicketsController())->update($message, $send, $responseWithError);
                 break;
+
+
         }
     }
 

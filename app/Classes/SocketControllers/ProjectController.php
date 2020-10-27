@@ -10,7 +10,8 @@ use App\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
+use \GuzzleHttp\Client;
+use \Exception;
 
 class ProjectController
 {
@@ -19,6 +20,21 @@ class ProjectController
     public function __construct()
     {
         $this->service = new ProjectService();
+    }
+
+    public function getUserIdByToken($accessToken) {
+        try {
+            $client = new Client;
+            $response = $client->request('GET', 'http://laravel.example.com/api/auth/user', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.$accessToken,
+                ],
+            ]);
+            return json_decode($response->getBody())->id;
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
     public function updateTitle($message, $send, $responseWithError) {
@@ -34,11 +50,14 @@ class ProjectController
         try {
             $project = $this->service->updateProjectTitle($message["id"], $message["title"]);
             DB::commit();
-            $send($project);
-        } catch (\Exception $exception) {
+            $obj = [];
+            $obj["type"] = "projects.title";
+            $obj["project"] = $project;
+            $send(json_encode($obj));
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::channel('errorLogger')->error('Update title, transaction error' .  $exception->getMessage());
-            $responseWithError(json_encode(["error" => "Can't update title" . $exception->getMessage()]));
+            Log::channel('errorLogger')->error('Update title, transaction error ' .  $exception->getMessage());
+            $responseWithError(json_encode(["error" => "Can't update title " . $exception->getMessage()]));
         }
     }
 
@@ -61,12 +80,43 @@ class ProjectController
             Project::destroy($project_id);
             DB::commit();
             $send(json_encode($obj));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             Log::channel('errorLogger')->error('Delete project, transaction error');
             $responseWithError(json_encode(["error" => "Can't delete project" ]));
         }
+    }
 
+    public function addProject($message, $send, $responseWithError) {
+        $validator = Validator::make($message, [
+            'access_token' => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            Log::channel('errorLogger')->error('Add project, validation error', ['errors' => $validator->errors()]);
+            $responseWithError(json_encode(["error" => "Data is not valid"]));
+        }
+        $access_token = $message['access_token'];
+        DB::beginTransaction();
+        try {
+            $obj = [];
+            $obj["type"] = "projects.add";
+            $user_id = $this->getUserIdByToken($access_token);
+            if(!$user_id) {
+                Log::channel('errorLogger')->error('Failed to find user');
+                $responseWithError(json_encode(["error" => "Failed to find user" ]));
+            }
+            $project = Project::create([
+                'title' => '',
+                'user_id' => $user_id
+            ]);
+            $obj["project"] = $project->load('users');
+            DB::commit();
+            $send(json_encode($obj));
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::channel('errorLogger')->error('Failed to add project, transaction error');
+            $responseWithError(json_encode(["error" => "Failed to add project" ]));
+        }
     }
 
 }

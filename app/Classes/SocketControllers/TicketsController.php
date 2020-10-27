@@ -8,7 +8,8 @@ use App\Ticket;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
+use \GuzzleHttp\Client;
+use \Exception;
 
 class TicketsController
 {
@@ -21,7 +22,7 @@ class TicketsController
 
     public function getUserId($accessToken) {
         try {
-            $client = new \GuzzleHttp\Client;
+            $client = new Client;
             $response = $client->request('GET', 'http://laravel.example.com/api/auth/user', [
                 'headers' => [
                     'Accept' => 'application/json',
@@ -29,10 +30,9 @@ class TicketsController
                 ],
             ]);
             return json_decode($response->getBody())->id;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
-
     }
 
 
@@ -63,7 +63,7 @@ class TicketsController
                 //creator
                 $send(json_encode($jsonObject));
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             Log::channel('errorLogger')->error('Create Ticket, transaction error');
             $responseWithError(json_encode(["error" => "Can't create ticket" ]));
@@ -89,7 +89,7 @@ class TicketsController
             $jsonObject["ticket"] = $ticket;
             DB::commit();
             $send(json_encode($jsonObject));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             Log::channel('errorLogger')->error('Delete Ticket, transaction error' . $exception->getMessage());
             $responseWithError(json_encode(["error" => "Can't delete ticket" ]));
@@ -125,7 +125,7 @@ class TicketsController
             $jsonObject["ticket"] = $ticket_to_send;
             DB::commit();
             $send(json_encode($jsonObject));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             Log::channel('errorLogger')->error('Update Ticket, transaction error' . $exception->getMessage());
             $responseWithError(json_encode(["error" => "Can't Update ticket" ]));
